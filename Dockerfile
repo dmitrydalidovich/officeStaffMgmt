@@ -4,6 +4,7 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY gradlew .
 COPY gradle ./gradle
+RUN ./gradlew dependencies
 COPY src ./src
 RUN ./gradlew clean build -x test
 

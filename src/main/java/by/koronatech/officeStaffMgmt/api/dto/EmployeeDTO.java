@@ -1,9 +1,6 @@
 package by.koronatech.officeStaffMgmt.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -11,6 +8,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeDTO implements FullNameProvider {
     private String fullName;
     private BigDecimal salary;

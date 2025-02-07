@@ -1,9 +1,9 @@
-version: '2.26'
+version: '3.8'
 
 services:
   office-staff-postgres-db:
     image: postgres:12
-    container_name: office_staff_postgres_container
+    container_name: office-staff-postgres-container
     environment:
       POSTGRES_USER: officeStaffAdmin
       POSTGRES_PASSWORD: officeStaffAdmin
@@ -11,27 +11,25 @@ services:
     ports:
       - "5432:5432"
     restart: always
-    networks:
-      - office-staff-network
-
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U officeStaffAdmin -d officeStaff" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   office-staff-app:
     build:
       context: .
-    container_name: office_staff_app_container
+      dockerfile: Dockerfile
+    container_name: office-staff-app-container
     ports:
       - "8080:8080"
     environment:
-      DB_HOST: office-staff-postgres-db
-      DB_PORT: 5432
-      DB_NAME: officeStaff
-      DB_USER: officeStaffAdmin
-      DB_PASSWORD: officeStaffAdmin
+      SPRING_DATASOURCE_URL: jdbc:postgresql://office-staff-postgres-db:5432/officeStaff
+      SPRING_DATASOURCE_USERNAME: officeStaffAdmin
+      SPRING_DATASOURCE_PASSWORD: officeStaffAdmin
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     depends_on:
-      - office-staff-postgres-db
-    networks:
-      - office-staff-network
-
-networks:
-  office-staff-network:
-    driver: bridge
+      office-staff-postgres-db:
+        condition: service_healthy
