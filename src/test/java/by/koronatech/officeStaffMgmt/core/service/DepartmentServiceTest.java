@@ -63,25 +63,6 @@ class DepartmentServiceTest {
     }
 
     @Test
-    void testGetDepartmentFound() {
-        when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
-        when(departmentMapper.toDTO(department)).thenReturn(departmentDTO);
-
-        DepartmentDTO result = departmentService.getDepartment(1L);
-
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
-        assertEquals("Finance", result.getName());
-    }
-
-    @Test
-    void testGetDepartmentNotFound() {
-        when(departmentRepository.findById(2L)).thenReturn(Optional.empty());
-
-        assertThrows(NoSuchElementException.class, () -> departmentService.getDepartment(2L));
-    }
-
-    @Test
     void testGetDepartmentDetailsFound() {
         when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
 

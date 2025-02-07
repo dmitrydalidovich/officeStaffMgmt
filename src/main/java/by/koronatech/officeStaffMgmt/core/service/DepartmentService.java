@@ -29,15 +29,6 @@ public class DepartmentService {
         return departmentRepository.findAll(pageRequest).map(departmentMapper::toDTO);
     }
 
-    public DepartmentDTO getDepartment(Long id){
-        Optional<Department> optionalDepartment = departmentRepository.findById(id);
-        if (optionalDepartment.isEmpty()){
-            throw new NoSuchElementException("Department with id=" + id + " is not found");
-        }
-
-        return departmentMapper.toDTO(optionalDepartment.get());
-    }
-
     public DepartmentDetailsDTO getDepartmentDetails(Long id){
         Optional<Department> optionalDepartment = departmentRepository.findById(id);
         if (optionalDepartment.isEmpty()){
