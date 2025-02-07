@@ -5,13 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 public class EmployeeDTO implements FullNameProvider {
     private String fullName;
-    private Float salary;
+    private BigDecimal salary;
     private String department;
     private Boolean manager;
 }

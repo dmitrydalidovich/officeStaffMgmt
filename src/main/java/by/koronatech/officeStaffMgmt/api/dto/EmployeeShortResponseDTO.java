@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Setter
 @Getter
 @Builder
@@ -12,6 +14,6 @@ import lombok.Setter;
 public class EmployeeShortResponseDTO implements FullNameProvider {
     private Long id;
     private String fullName;
-    private Float salary;
+    private BigDecimal salary;
     private Boolean manager;
 }

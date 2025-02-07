@@ -1,0 +1,37 @@
+version: '2.26'
+
+services:
+  office-staff-postgres-db:
+    image: postgres:12
+    container_name: office_staff_postgres_container
+    environment:
+      POSTGRES_USER: officeStaffAdmin
+      POSTGRES_PASSWORD: officeStaffAdmin
+      POSTGRES_DB: officeStaff
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - office-staff-network
+
+
+  office-staff-app:
+    build:
+      context: .
+    container_name: office_staff_app_container
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: office-staff-postgres-db
+      DB_PORT: 5432
+      DB_NAME: officeStaff
+      DB_USER: officeStaffAdmin
+      DB_PASSWORD: officeStaffAdmin
+    depends_on:
+      - office-staff-postgres-db
+    networks:
+      - office-staff-network
+
+networks:
+  office-staff-network:
+    driver: bridge

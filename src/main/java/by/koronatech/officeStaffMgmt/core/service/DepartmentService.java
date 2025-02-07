@@ -2,53 +2,52 @@ package by.koronatech.officeStaffMgmt.core.service;
 
 import by.koronatech.officeStaffMgmt.api.dto.DepartmentDTO;
 import by.koronatech.officeStaffMgmt.api.dto.DepartmentDetailsDTO;
-import by.koronatech.officeStaffMgmt.api.dto.EmployeeShortResponseDTO;
 import by.koronatech.officeStaffMgmt.core.mapper.officeStaff.ViewDepartmentMapper;
 import by.koronatech.officeStaffMgmt.core.model.Department;
+import by.koronatech.officeStaffMgmt.core.repository.DepartmentRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class DepartmentService {
 
+    @Autowired
+    private final DepartmentRepository departmentRepository;
     private final ViewDepartmentMapper departmentMapper;
-    @Getter
-    private final List<Department> departmentsCacheRepo = getDepartmentArrayList();
 
-    public List<DepartmentDTO> getDepartments(){
-        return departmentMapper.toDTOs(this.departmentsCacheRepo);
+    public Page<DepartmentDTO> getDepartments(Pageable pageRequest){
+        return departmentRepository.findAll(pageRequest).map(departmentMapper::toDTO);
     }
 
     public DepartmentDTO getDepartment(Long id){
-        return departmentMapper.toDTO(this.departmentsCacheRepo.stream().filter(
-                department -> department.getId().equals(id)).findFirst().orElseThrow());
+        Optional<Department> optionalDepartment = departmentRepository.findById(id);
+        if (optionalDepartment.isEmpty()){
+            throw new NoSuchElementException("Department with id=" + id + " is not found");
+        }
+
+        return departmentMapper.toDTO(optionalDepartment.get());
     }
 
     public DepartmentDetailsDTO getDepartmentDetails(Long id){
-        Department department = departmentsCacheRepo.stream().filter(d -> d.getId().equals(id)).findFirst().orElseThrow();
+        Optional<Department> optionalDepartment = departmentRepository.findById(id);
+        if (optionalDepartment.isEmpty()){
+            throw new NoSuchElementException("Department with id=" + id + " is not found");
+        }
+
+        Department department = optionalDepartment.get();
         return DepartmentDetailsDTO.builder()
                 .id(department.getId())
                 .name(department.getName())
                 .build();
     }
-
-    private static ArrayList<Department> getDepartmentArrayList() {
-        return new ArrayList<>(
-                List.of(
-                        Department.builder().id(1L).name("Marketing").build(),
-                        Department.builder().id(2L).name("Sales").build(),
-                        Department.builder().id(3L).name("R&D").build(),
-                        Department.builder().id(4L).name("Logistics").build(),
-                        Department.builder().id(5L).name("Administrative").build(),
-                        Department.builder().id(6L).name("Accounting").build(),
-                        Department.builder().id(7L).name("IT").build()
-                )
-        );
-    }
-
 }
