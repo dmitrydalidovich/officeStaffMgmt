@@ -3,9 +3,10 @@ package by.koronatech.officeStaffMgmt.api.controller;
 import by.koronatech.officeStaffMgmt.api.dto.EmployeeDTO;
 import by.koronatech.officeStaffMgmt.api.dto.EmployeeResponseDTO;
 import by.koronatech.officeStaffMgmt.core.service.EmployeeService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @GetMapping
-    public List<EmployeeResponseDTO> getEmployees(){
-        return employeeService.getAllEmployees();
+    public Page<EmployeeResponseDTO> getEmployees(Pageable pageable){
+        return employeeService.getAllEmployees(pageable);
     }
 
     @GetMapping("/{id}")
